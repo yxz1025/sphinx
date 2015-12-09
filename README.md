@@ -1,9 +1,8 @@
-# sphinx
 实时的分布式sphinx索引配置及使用方法总结
 coreseek文档：http://sphinxsearch.com/wiki/doku.php?id=sphinx_manual_chinese#需要的工具
-安装步骤详情:
-http://blog.csdn.net/e421083458/article/details/21529969
+
 需要更改/usr/local/coreseek/var/data  下的目录权限
+
 安装开始：
  cd /data/softwore
  wget  http://www.coreseek.cn/uploads/csft/4.0/coreseek-4.1-beta.tar.gz(只安装中文分词mmseg3)
@@ -42,13 +41,12 @@ $ cd ..
 
 
 ##安装sphinx
-
 $ cd csft-4.1
 $ sh buildconf.sh    #输出的warning信息可以忽略，如果出现error则需要解决
 $ ./configure --prefix=/usr/local/sphinx  --without-unixodbc --with-mmseg --with-mmseg-includes=/usr/local/mmseg3/include/mmseg/ --with-mmseg-libs=/usr/local/mmseg3/lib/ --with-mysql-includes=/usr/local/webserver/mysql/include/mysql --with-mysql-libs=/usr/local/webserver/mysql/lib/mysql  //此处的MySQL依赖库需要根据具体安装的MySQL路径有关/lib/mysql/为文件夹,有些系统没有mysql文件夹 直接指定到include或lib下即
 
 
-    ##如果提示mysql问题，可以查看MySQL数据源安装说明
+##如果提示mysql问题，可以查看MySQL数据源安装说明
 $ make && make install
 $ cd ..
 
@@ -63,15 +61,15 @@ $ /usr/local/mmseg3/bin/mmseg -d /usr/local/mmseg3/etc var/test/test.xml
 打开sphinx-2.1.9.release下的configure
 
 
-##可能遇到的问题：
+可能遇到的问题：
 
-##如果提示libtool: unrecognized option `--tag=CC' ，请查看libtool问题解决方案
+如果提示libtool: unrecognized option `--tag=CC' ，请查看libtool问题解决方案
 
-##有的系统下可能出现：expected `;' before ‘CSphTokenizer_UTF8SpaceSeg’，
-##或者出现：configure: WARNING: unrecognized options: --with-mmseg, --with-mmseg-includes, --with-mmseg-libs
-##是因为你没有进行随后的sh buildconf.sh操作
-##生成当前系统对应的编译配置文件
-##需要使用以下指令：
+有的系统下可能出现：expected `;' before ‘CSphTokenizer_UTF8SpaceSeg’，
+或者出现：configure: WARNING: unrecognized options: --with-mmseg, --with-mmseg-includes, --with-mmseg-libs
+是因为你没有进行随后的sh buildconf.sh操作
+生成当前系统对应的编译配置文件
+需要使用以下指令：
 $ sh buildconf.sh
 
 ## Linux环境下，如遇到pthread问题，请先直接执行以下指令在进行configur：
@@ -244,45 +242,45 @@ searchd
 
 [php] view plaincopyprint?
 
-- index dist
-- {
--         type                            = distributed
--         agent                           = 127.0.0.1:9313:index_3307_0
--         agent                           = 127.0.0.1:9313:index_3307_0_delta
--         agent                           = 127.0.0.1:9314:index_3307_1
--         agent                           = 127.0.0.1:9314:index_3307_1_delta
--         agent                           = 127.0.0.1:9316:index_3308_0
--         agent                           = 127.0.0.1:9316:index_3308_0_delta
--         agent                           = 127.0.0.1:9317:index_3308_1
--         agent                           = 127.0.0.1:9317:index_3308_1_delta
--         agent                           = 127.0.0.1:9319:index_3309_0
--         agent                           = 127.0.0.1:9319:index_3309_0_delta
--         agent                           = 127.0.0.1:9320:index_3309_1
--         agent                           = 127.0.0.1:9320:index_3309_1_delta
--         agent_query_timeout             = 100000
-- }
--
-- indexer
-- {
--     mem_limit           = 1024M
-- }
-- searchd
-- {
--     listen              = 9312
--     read_timeout        = 5
--     max_children        = 30
--     max_matches         = 6000
--     seamless_rotate     = 1
--     preopen_indexes     = 1
--     unlink_old          = 1
--     compat_sphinxql_magics=0
--     query_log_format    = sphinxql
--     pid_file            = /usr/local/coreseek/var/log/searchd_mysql.pid
--     log                 = /usr/local/coreseek/var/log/searchd_mysql.log
--     query_log           = /usr/local/coreseek/var/log/query_mysql.log
--     #workers            = threads
--     dist_threads = 6  #几台分布式机器
-- }
+index dist
+{
+         type                            = distributed
+         agent                           = 127.0.0.1:9313:index_3307_0
+         agent                           = 127.0.0.1:9313:index_3307_0_delta
+         agent                           = 127.0.0.1:9314:index_3307_1
+         agent                           = 127.0.0.1:9314:index_3307_1_delta
+         agent                           = 127.0.0.1:9316:index_3308_0
+         agent                           = 127.0.0.1:9316:index_3308_0_delta
+         agent                           = 127.0.0.1:9317:index_3308_1
+         agent                           = 127.0.0.1:9317:index_3308_1_delta
+         agent                           = 127.0.0.1:9319:index_3309_0
+         agent                           = 127.0.0.1:9319:index_3309_0_delta
+         agent                           = 127.0.0.1:9320:index_3309_1
+         agent                           = 127.0.0.1:9320:index_3309_1_delta
+         agent_query_timeout             = 100000
+}
+
+indexer
+ {
+     mem_limit           = 1024M
+ }
+searchd
+ {
+     listen              = 9312
+     read_timeout        = 5
+     max_children        = 30
+     max_matches         = 6000
+     seamless_rotate     = 1
+     preopen_indexes     = 1
+     unlink_old          = 1
+     compat_sphinxql_magics=0
+     query_log_format    = sphinxql
+     pid_file            = /usr/local/coreseek/var/log/searchd_mysql.pid
+     log                 = /usr/local/coreseek/var/log/searchd_mysql.log
+     query_log           = /usr/local/coreseek/var/log/query_mysql.log
+    #workers            = threads
+     dist_threads = 6  #几台分布式机器
+ }
 
 最后记得加入到开机命令中：
 
