@@ -1,19 +1,16 @@
 实时的分布式sphinx索引配置及使用方法总结
 coreseek文档：http://sphinxsearch.com/wiki/doku.php?id=sphinx_manual_chinese#需要的工具
 
-需要更改/usr/local/coreseek/var/data下的目录权限
+需要更改/usr/local/coreseek/var/data  下的目录权限
 
 安装开始：
  cd /data/softwore
- 
  wget  http://www.coreseek.cn/uploads/csft/4.0/coreseek-4.1-beta.tar.gz(只安装中文分词mmseg3)
- 
  tar zxvf coreseek-4.1-beta.tar.gz
- 
  cd coreseek-4.1-beta.tar.gz/
 
 
-##安装mmseg
+安装mmseg
 $ cd mmseg-3.2.14  //根据具体的版本而定
 $ ./bootstrap    #输出的warning信息可以忽略，如果出现error则需要解决
 $ ./configure --prefix=/usr/local/mmseg3
@@ -24,23 +21,20 @@ $ cd ..
 5. 生成字典
 
 因为用到中文分词，需要生成字典，去安装目录，比如我的是 /home/changyou/mmseg.3.0b3/data/
-#mmseg -u unigram.txt 该命令执行后，将会产生一个名为unigram.txt.uni的文件，将该文件改名为uni.lib，完成词
+mmseg -u unigram.txt 该命令执行后，将会产生一个名为unigram.txt.uni的文件，将该文件改名为uni.lib，完成词
 
-- 遇到的问题:
-- error: cannot find input file: src/Makefile.in
-- 或者遇到其他类似error错误时...
--
-- 解决方案：
-- 依次执行下面的命令，我运行'aclocal'时又出现了错误，解决方案请看下文描述
--
-- yum -y install libtool
--
-- aclocal
-- libtoolize --force
-- automake --add-missing
-- autoconf
-- autoheader
-- make clean
+遇到的问题:
+error: cannot find input file: src/Makefile.in
+或者遇到其他类似error错误时...
+解决方案：
+依次执行下面的命令，我运行'aclocal'时又出现了错误，解决方案请看下文描述
+yum -y install libtool
+aclocal
+libtoolize --force
+automake --add-missing
+autoconf
+autoheader
+make clean
 
 
 ##安装sphinx
@@ -106,8 +100,8 @@ CREATE TABLE sph_counter
  配置数据源文件
  vi /usr/local/sphinx/etc/sphinx.conf
  写入如下内容配置
-   source main
-   {
+ source main
+{
         type    = mysql
         sql_host = localhost ＃此处为数据库地址
         sql_user = root #用户名
@@ -135,14 +129,14 @@ CREATE TABLE sph_counter
         sql_attr_timestamp = mtime
         sql_query_info_pre      = SET NAMES utf8
         sql_query_info  = SELECT id,name,companyname,radians(lat) as lat,radians(lng) as lng,salary,education,jobtype,secondtype,UNIX_TIMESTAMP(ctime) As ctime,UNIX_TIMESTAMP(mtime) As mtime FROM job order by ctime desc
-  }
+}
 
-   source delta : main
-   {
-     sql_query_pre           = SET NAMES utf8
-     sql_query               = SELECT id,name,companyname,radians(lat) as lat,radians(lng) as lng,salary,education,jobtype,secondtype,UNIX_TIMESTAMP(ctime) As ctime,UNIX_TIMESTAMP(mtime) As mtime FROM job WHERE id>(SELECT max_doc_id FROM sph_counter_product WHERE counter_id=1 )
-     sql_query_post_index    = REPLACE INTO sph_counter_product SELECT 1,MAX(id) FROM job
-   }
+source delta : main
+{
+    sql_query_pre           = SET NAMES utf8
+    sql_query               = SELECT id,name,companyname,radians(lat) as lat,radians(lng) as lng,salary,education,jobtype,secondtype,UNIX_TIMESTAMP(ctime) As ctime,UNIX_TIMESTAMP(mtime) As mtime FROM job WHERE id>(SELECT max_doc_id FROM sph_counter_product WHERE counter_id=1 )
+    sql_query_post_index    = REPLACE INTO sph_counter_product SELECT 1,MAX(id) FROM job
+}
 
 #index 定义
 index main
