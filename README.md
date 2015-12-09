@@ -1,7 +1,7 @@
 实时的分布式sphinx索引配置及使用方法总结
 coreseek文档：http://sphinxsearch.com/wiki/doku.php?id=sphinx_manual_chinese#需要的工具
 需要更改/usr/local/coreseek/var/data  下的目录权限
-[php] view plaincopyprint?
+
 
     安装开始：
      cd /data/softwore
