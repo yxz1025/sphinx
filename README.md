@@ -1,13 +1,16 @@
 实时的分布式sphinx索引配置及使用方法总结
 coreseek文档：http://sphinxsearch.com/wiki/doku.php?id=sphinx_manual_chinese#需要的工具
 
-需要更改/usr/local/coreseek/var/data  下的目录权限
+需要更改/usr/local/coreseek/var/data下的目录权限
 
 安装开始：
  cd /data/softwore
+ 
  wget  http://www.coreseek.cn/uploads/csft/4.0/coreseek-4.1-beta.tar.gz(只安装中文分词mmseg3)
+ 
  tar zxvf coreseek-4.1-beta.tar.gz
-cd coreseek-4.1-beta.tar.gz/
+ 
+ cd coreseek-4.1-beta.tar.gz/
 
 
 ##安装mmseg
@@ -103,8 +106,8 @@ CREATE TABLE sph_counter
  配置数据源文件
  vi /usr/local/sphinx/etc/sphinx.conf
  写入如下内容配置
- source main
-{
+   source main
+   {
         type    = mysql
         sql_host = localhost ＃此处为数据库地址
         sql_user = root #用户名
@@ -132,14 +135,14 @@ CREATE TABLE sph_counter
         sql_attr_timestamp = mtime
         sql_query_info_pre      = SET NAMES utf8
         sql_query_info  = SELECT id,name,companyname,radians(lat) as lat,radians(lng) as lng,salary,education,jobtype,secondtype,UNIX_TIMESTAMP(ctime) As ctime,UNIX_TIMESTAMP(mtime) As mtime FROM job order by ctime desc
-}
+  }
 
-source delta : main
-{
-    sql_query_pre           = SET NAMES utf8
-    sql_query               = SELECT id,name,companyname,radians(lat) as lat,radians(lng) as lng,salary,education,jobtype,secondtype,UNIX_TIMESTAMP(ctime) As ctime,UNIX_TIMESTAMP(mtime) As mtime FROM job WHERE id>(SELECT max_doc_id FROM sph_counter_product WHERE counter_id=1 )
-    sql_query_post_index    = REPLACE INTO sph_counter_product SELECT 1,MAX(id) FROM job
-}
+   source delta : main
+   {
+     sql_query_pre           = SET NAMES utf8
+     sql_query               = SELECT id,name,companyname,radians(lat) as lat,radians(lng) as lng,salary,education,jobtype,secondtype,UNIX_TIMESTAMP(ctime) As ctime,UNIX_TIMESTAMP(mtime) As mtime FROM job WHERE id>(SELECT max_doc_id FROM sph_counter_product WHERE counter_id=1 )
+     sql_query_post_index    = REPLACE INTO sph_counter_product SELECT 1,MAX(id) FROM job
+   }
 
 #index 定义
 index main
