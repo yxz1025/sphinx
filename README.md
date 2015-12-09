@@ -41,7 +41,7 @@ coreseek文档：http://sphinxsearch.com/wiki/doku.php?id=sphinx_manual_chinese#
     $ cat var/test/test.xml    #此时应该正确显示中文
     $ /usr/local/mmseg3/bin/mmseg -d /usr/local/mmseg3/etc var/test/test.xml
 
-[php] view plaincopyprint?
+
 
       安装sphinx报错解决方法如下：
       打开sphinx-2.1.9.release下的configure
@@ -77,7 +77,7 @@ coreseek文档：http://sphinxsearch.com/wiki/doku.php?id=sphinx_manual_chinese#
            max_doc_id INTEGER NOT NULL
       );
      配置数据源文件
-[php] view plaincopyprint?
+
 
     vi /usr/local/sphinx/etc/sphinx.conf
     写入如下内容配置
@@ -157,34 +157,34 @@ coreseek文档：http://sphinxsearch.com/wiki/doku.php?id=sphinx_manual_chinese#
       上面为数据源配置
       调用命令列表：
       执行索引（查询、测试前必须执行一次）
-[plain] view plaincopyprint?
+
 
      /usr/local/sphinx/bin/indexer -c /usr/local/sphinx/etc/sphinx.conf --all --rotate
      启动后台服务（必须开启）
-[plain] view plaincopyprint?
+
 
      /usr/local/sphinx/bin/searchd -c /usr/local/sphinx/etc/sphinx.conf
      启动报错 找不到mysql.sock 解决方法：
      使用软链接 ln -s  /tmp/mysql.sock /var/lib/mysql/mysql.sock
      执行增量索引
-[plain] view plaincopyprint?
+
 
      /usr/local/sphinx/bin/indexer -c /usr/local/sphinx/etc/sphinx.conf delta --rotate
      合并索引
-[plain] view plaincopyprint?
+
 
      /usr/local/sphinx/bin/indexer -c /usr/local/sphinx/etc/sphinx.conf --merge main delta --rotate --merge-dst-range deleted 0 0
      (为了防止多个关键字指向同一个文档加上--merge-dst-range deleted 0 0)
-后台服务测试
-[plain] view plaincopyprint?
+     后台服务测试
+
 
      /usr/local/coreseek/bin/search -c /usr/local/coreseek/etc/csft_mysql.conf  aaa
      关闭后台服务
-[plain] view plaincopyprint?
+
 
      /usr/local/sphinx/bin/searchd -c /usr/local/sphinx/etc/sphinx.conf --stop
      自动化命令：
-[plain] view plaincopyprint?
+
 
      crontab -e
      */1 * * * * /bin/sh /usr/local/sphinx/bin/indexer -c /usr/local/sphinx/etc/sphinx.conf delta --rotate
@@ -192,7 +192,7 @@ coreseek文档：http://sphinxsearch.com/wiki/doku.php?id=sphinx_manual_chinese#
      30 1 * * *  /bin/sh /usr/local/sphinx/bin/indexer -c /usr/local/sphinx/etc/sphinx.conf --all --rotate
      以下任务计划的意思是：每隔一分钟执行一遍增量索引，每五分钟执行一遍合并索引，每天1:30执行整体索引。
      分布式配置
-[php] view plaincopyprint?
+
 
      index dist
      {
